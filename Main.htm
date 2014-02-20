@@ -1,0 +1,127 @@
+<head>
+	<link rel="stylesheet" href="css/bootstrap.css">
+	<link rel="stylesheet" href="css/bootstrap-theme.css">
+	<script src="js/angular.min.js"></script>
+	<script>
+		mapWidth = 1000;
+		mapHeight = 1000;
+
+		mapLonLeft = 40.97;
+		mapLonRight = 51.99;
+		mapLonDelta = mapLonRight - mapLonLeft;
+
+		mapLatBottom = 11.2;
+		mapLatBottomDegree = mapLatBottom * 3.1415926 / 180;
+
+		function MapCtrl($scope, $http) {
+			$scope.cities = [];
+			$scope.lands = [];
+
+			$scope.multx = 19;
+			$scope.offsetX = 242;
+			$scope.multy = 17;
+			$scope.offsetY = 163;
+
+			//Get the cities
+			$http({
+				method : 'GET',
+				url : 'data/placesf.json'
+			}).success(function(data, status, headers, config) {
+				$scope.cities = data.features;
+			}).error(function(data, status, headers, config) {
+			});
+
+			//Get the land
+			$http({
+				method : 'GET',
+				url : 'data/subunitsf.json'
+			}).success(function(data, status, headers, config) {
+				$scope.lands = data.features;
+			}).error(function(data, status, headers, config) {
+			});
+
+			//Mercator projection
+			$scope.convert = function(coor) {
+
+				latitude = coor[1];
+				longitude = coor[0];
+
+				mapWidth = 500;
+				mapHeight = 500;
+
+				// get x value
+				x = (longitude + 180) * (mapWidth / 360);
+
+				// convert from degrees to radians
+				latRad = latitude * Math.PI / 180;
+
+				// get y value
+				mercN = Math.log(Math.tan((Math.PI / 4) + (latRad / 2)));
+				y = (mapHeight / 2) - (mapWidth * mercN / (2 * Math.PI));
+
+				//Convert to Graphics Y coordinate
+				y = y;
+				
+				//Adjust the X,Y
+				x = $scope.multx*(x-$scope.offsetX);
+				y = $scope.multy*(y-$scope.offsetY);
+				
+				return [x, y];
+			};
+			
+			$scope.createPath = function(coors){
+				res = coors.map(function(value,index){return $scope.convert(value).join(",")}).join(" ");
+				return res;
+			};
+
+		}
+
+	</script>
+</head>
+
+<body ng-app>
+
+	<div ng-controller="MapCtrl">
+
+		<input type="range" ng-model="multx" min="1" max="50"/>
+		<input type="range" ng-model="offsetX" min="1" max="1000"/>
+		<input type="range" ng-model="multy" min="1" max="50"/>
+		<input type="range" ng-model="offsetY" min="1" max="1000"/>
+		<input  ng-model="multx" min="1" max="10"/>
+		<input  ng-model="offsetX" min="1" max="1000"/>
+		<input  ng-model="multy" min="1" max="10"/>
+		<input  ng-model="offsetY" min="1" max="1000"/>
+
+		<svg xmlns="http://www.w3.org/2000/svg" width="500" height="500">
+			
+			<g ng-repeat="land in lands">
+				<g ng-repeat="polygon in land.geometry.coordinates">
+					<polygon ng-attr-points="{{createPath(polygon[0])}}" stroke="lightblue" fill="lightgreen" width="1" />
+					 <!--<line ng-repeat="coor in polygon[0]"
+					ng-if="$index>1"
+					ng-attr-x1={{multx*(convert(coor)[0]-offsetX)}}
+					ng-attr-y1={{multy*(convert(coor)[1]-offsetY)}}
+					ng-attr-x2={{multx*(convert(polygon[0][$index-1])[0]-offsetX)}}
+					ng-attr-y2={{multy*(convert(polygon[0][$index-1])[1]-offsetY)}}
+					stroke="lightblue"
+					/>-->
+				</g>
+			</g>
+			
+			<rect ng-repeat="city in cities" ng-attr-x="{{convert(city.geometry.coordinates)[0]}}" ng-attr-y="{{convert(city.geometry.coordinates)[1]}}" width="4" height="4"/>
+			<text font-size="12px" ng-repeat="city in cities" ng-attr-x="{{convert(city.geometry.coordinates)[0]}}" ng-attr-y="{{convert(city.geometry.coordinates)[1]}}" width="10" height="10">
+				{{city.properties.NAME}}
+			</text>
+		</svg>
+
+		<div ng-repeat="land in lands">
+			{{land.geometry.type}}
+			<div ng-repeat="polygon in land.geometry.coordinates">
+				{{polygon[0].length}}
+			</div>
+		</div>
+
+	</div>
+
+</body>
+
