@@ -2,18 +2,18 @@
 	<link rel="stylesheet" href="css/bootstrap.css">
 	<link rel="stylesheet" href="css/bootstrap-theme.css">
 	<script src="js/angular.min.js"></script>
+	<script src="js/ngmaps.js"></script>
 	<script>
-		mapWidth = 1000;
-		mapHeight = 1000;
+		var myapp = angular.module('geo', ['ngMaps']);
 
-		mapLonLeft = 40.97;
-		mapLonRight = 51.99;
-		mapLonDelta = mapLonRight - mapLonLeft;
+		myapp.config(function(projectionProvider) {
+			projectionProvider.setDimension({
+				width : 500,
+				height : 500
+			});
+		});
 
-		mapLatBottom = 11.2;
-		mapLatBottomDegree = mapLatBottom * 3.1415926 / 180;
-
-		function MapCtrl($scope, $http) {
+		myapp.controller("MapCtrl", function($scope, $http, projection) {
 			$scope.cities = [];
 			$scope.lands = [];
 
@@ -22,6 +22,20 @@
 			$scope.multy = 17;
 			$scope.offsetY = 163;
 
+			$scope.convert = function(coor) {
+				var proj = projection.project(coor);
+				proj[0] = $scope.multx * (proj[0] - $scope.offsetX);
+				proj[1] = $scope.multy * (proj[1] - $scope.offsetY);
+				return proj;
+			};
+
+			$scope.createPath = function(coors) {
+				res = coors.map(function(value, index) {
+					return $scope.convert(value).join(",");
+				}).join(" ");
+				return res;
+			};
+			
 			//Get the cities
 			$http({
 				method : 'GET',
@@ -40,46 +54,12 @@
 			}).error(function(data, status, headers, config) {
 			});
 
-			//Mercator projection
-			$scope.convert = function(coor) {
-
-				latitude = coor[1];
-				longitude = coor[0];
-
-				mapWidth = 500;
-				mapHeight = 500;
-
-				// get x value
-				x = (longitude + 180) * (mapWidth / 360);
-
-				// convert from degrees to radians
-				latRad = latitude * Math.PI / 180;
-
-				// get y value
-				mercN = Math.log(Math.tan((Math.PI / 4) + (latRad / 2)));
-				y = (mapHeight / 2) - (mapWidth * mercN / (2 * Math.PI));
-
-				//Convert to Graphics Y coordinate
-				y = y;
-				
-				//Adjust the X,Y
-				x = $scope.multx*(x-$scope.offsetX);
-				y = $scope.multy*(y-$scope.offsetY);
-				
-				return [x, y];
-			};
-			
-			$scope.createPath = function(coors){
-				res = coors.map(function(value,index){return $scope.convert(value).join(",")}).join(" ");
-				return res;
-			};
-
-		}
+		});
 
 	</script>
 </head>
 
-<body ng-app>
+<body ng-app="geo">
 
 	<div ng-controller="MapCtrl">
 
@@ -93,21 +73,13 @@
 		<input  ng-model="offsetY" min="1" max="1000"/>
 
 		<svg xmlns="http://www.w3.org/2000/svg" width="500" height="500">
-			
+
 			<g ng-repeat="land in lands">
 				<g ng-repeat="polygon in land.geometry.coordinates">
 					<polygon ng-attr-points="{{createPath(polygon[0])}}" stroke="lightblue" fill="lightgreen" width="1" />
-					 <!--<line ng-repeat="coor in polygon[0]"
-					ng-if="$index>1"
-					ng-attr-x1={{multx*(convert(coor)[0]-offsetX)}}
-					ng-attr-y1={{multy*(convert(coor)[1]-offsetY)}}
-					ng-attr-x2={{multx*(convert(polygon[0][$index-1])[0]-offsetX)}}
-					ng-attr-y2={{multy*(convert(polygon[0][$index-1])[1]-offsetY)}}
-					stroke="lightblue"
-					/>-->
 				</g>
 			</g>
-			
+
 			<rect ng-repeat="city in cities" ng-attr-x="{{convert(city.geometry.coordinates)[0]}}" ng-attr-y="{{convert(city.geometry.coordinates)[1]}}" width="4" height="4"/>
 			<text font-size="12px" ng-repeat="city in cities" ng-attr-x="{{convert(city.geometry.coordinates)[0]}}" ng-attr-y="{{convert(city.geometry.coordinates)[1]}}" width="10" height="10">
 				{{city.properties.NAME}}
