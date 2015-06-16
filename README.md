@@ -8,22 +8,16 @@ NgMap brings the power of Angular to the representation of Geographical Data.
 Getting Started
 --------------------
 
-This API in WIP !!
+THE API IS WIP !!!!
 
-This library provides:
-* Map directive
-* City directive
-* Region directive
-* Arrow directive
+This library provides an angular directive that displays a world map with the data in the attibutes:
+* routes: array of routes with originlat, originlon, destlat, destlon, width
+* points: array of points with text, pointlat, pointlon
 
 Examples:
 ```html
-<map center="France" src="geodata.json" height="400px" width="400px">
-    <region name="France"/>
-    <city name="Paris">
-    <arrow lat1="" lon1="" lat2="" lon2="" width= />
-    <text  lat="48" lon="2">Some text</text>
-</map>
+<ngmap route="routes" points="points">
+</ngmap>
 ```
 
-This library would provide
+The div will take the width of the container and will set the height so it's a square.
