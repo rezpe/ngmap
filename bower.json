@@ -1,0 +1,25 @@
+{
+  "name": "ngmap",
+  "version": "0.1.0",
+  "main": "ngmap.js",
+  "ignore": [
+    "bower.json",
+    ".bowerrc",
+    ".jshintrc",
+    ".gitignore",
+    "gulpfile.js",
+    "node_modules",
+    "package.json",
+    "components",
+    "src"
+  ],
+  "keywords": [
+    "map",
+    "angular",
+  ],
+  "description": "It shows a graph",
+  "dependencies": {
+   "angular":"*",
+    "d3": "~3.5.5",
+  }
+}
