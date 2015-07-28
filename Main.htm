@@ -6,94 +6,21 @@
 	<script>
 		var myapp = angular.module('geo', ['ngMaps']);
 
-		myapp.config(function(projectionProvider) {
-			projectionProvider.setDimension({
-				width : 500,
-				height : 500
-			});
-		});
-
-		myapp.controller("MapCtrl", function($scope, $http, projection) {
-			$scope.cities = [];
-			$scope.lands = [];
-
-			$scope.multx = 19;
-			$scope.offsetX = 242;
-			$scope.multy = 17;
-			$scope.offsetY = 163;
-
-			$scope.convert = function(coor) {
-				var proj = projection.project(coor);
-				proj[0] = $scope.multx * (proj[0] - $scope.offsetX);
-				proj[1] = $scope.multy * (proj[1] - $scope.offsetY);
-				return proj;
-			};
-
-			$scope.createPath = function(coors) {
-				res = coors.map(function(value, index) {
-					return $scope.convert(value).join(",");
-				}).join(" ");
-				return res;
-			};
+		myapp.controller("MapCtrl", function($scope, $http) {
 			
-			//Get the cities
-			$http({
-				method : 'GET',
-				url : 'data/placesf.json'
-			}).success(function(data, status, headers, config) {
-				$scope.cities = data.features;
-			}).error(function(data, status, headers, config) {
-			});
-
-			//Get the land
-			$http({
-				method : 'GET',
-				url : 'data/subunitsf.json'
-			}).success(function(data, status, headers, config) {
-				$scope.lands = data.features;
-			}).error(function(data, status, headers, config) {
-			});
-
+			/*
+			$scope.routes = 
+			
+			$scope.points = 
+			*/
 		});
 
 	</script>
 </head>
 
 <body ng-app="geo">
-
 	<div ng-controller="MapCtrl">
-
-		<input type="range" ng-model="multx" min="1" max="50"/>
-		<input type="range" ng-model="offsetX" min="1" max="1000"/>
-		<input type="range" ng-model="multy" min="1" max="50"/>
-		<input type="range" ng-model="offsetY" min="1" max="1000"/>
-		<input  ng-model="multx" min="1" max="10"/>
-		<input  ng-model="offsetX" min="1" max="1000"/>
-		<input  ng-model="multy" min="1" max="10"/>
-		<input  ng-model="offsetY" min="1" max="1000"/>
-
-		<svg xmlns="http://www.w3.org/2000/svg" width="500" height="500">
-
-			<g ng-repeat="land in lands">
-				<g ng-repeat="polygon in land.geometry.coordinates">
-					<polygon ng-attr-points="{{createPath(polygon[0])}}" stroke="lightblue" fill="lightgreen" width="1" />
-				</g>
-			</g>
-
-			<rect ng-repeat="city in cities" ng-attr-x="{{convert(city.geometry.coordinates)[0]}}" ng-attr-y="{{convert(city.geometry.coordinates)[1]}}" width="4" height="4"/>
-			<text font-size="12px" ng-repeat="city in cities" ng-attr-x="{{convert(city.geometry.coordinates)[0]}}" ng-attr-y="{{convert(city.geometry.coordinates)[1]}}" width="10" height="10">
-				{{city.properties.NAME}}
-			</text>
-		</svg>
-
-		<div ng-repeat="land in lands">
-			{{land.geometry.type}}
-			<div ng-repeat="polygon in land.geometry.coordinates">
-				{{polygon[0].length}}
-			</div>
-		</div>
-
+		<ngmap route="routes" points="points"></ngmap>
 	</div>
-
 </body>
 
