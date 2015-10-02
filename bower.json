@@ -1,25 +1,29 @@
 {
   "name": "ngmap",
-  "version": "0.1.0",
-  "main": "ngmap.js",
-  "ignore": [
-    "bower.json",
-    ".bowerrc",
-    ".jshintrc",
-    ".gitignore",
-    "gulpfile.js",
-    "node_modules",
-    "package.json",
-    "components",
-    "src"
+  "version": "0.1",
+  "homepage": "https://github.com/rezpe/ngmap",
+  "authors": [
+    "Sebastien Perez Vasseur <sebastien.perezvasseur@gmail.com>"
   ],
+  "description": "Angular D3 Map",
+  "main": "ngmaps.js",
   "keywords": [
-    "map",
     "angular",
+    "maps",
+    "d3",
+    "topojson"
   ],
-  "description": "It shows a graph",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
   "dependencies": {
-   "angular":"*",
-    "d3": "~3.5.5",
+    "angular": "~1.4.7",
+    "d3": "~3.5.6",
+    "topojson": "~1.6.19"
   }
 }
