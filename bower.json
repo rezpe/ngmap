@@ -18,9 +18,8 @@
     "angular",
   ],
   "description": "It shows a graph",
-  "dependencies": [
+  "dependencies": {
    "angular":"*",
     "d3": "~3.5.5",
-    "topojson":"*",
-  ]
+  }
 }
