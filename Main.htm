@@ -1,18 +1,19 @@
 <head>
-	<link rel="stylesheet" href="css/bootstrap.css">
-	<link rel="stylesheet" href="css/bootstrap-theme.css">
-	<script src="js/angular.min.js"></script>
-	<script src="js/ngmaps.js"></script>
+	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.css">
+	<script src="bower_components/jquery/dist/jquery.min.js"></script>
+		<script src="bower_components/angular/angular.min.js"></script>
+	<script src="bower_components/topojson/topojson.js" ></script>
+	<script src="bower_components/d3/d3.js" ></script>
+	<script src="ngmaps.js"></script>
 	<script>
 		var myapp = angular.module('geo', ['ngMaps']);
 
 		myapp.controller("MapCtrl", function($scope, $http) {
-			
-			/*
-			$scope.routes = 
-			
-			$scope.points = 
-			*/
+
+			$scope.center = [48.85,2.35]
+			$scope.scale = 100
+
 		});
 
 	</script>
@@ -20,7 +21,6 @@
 
 <body ng-app="geo">
 	<div ng-controller="MapCtrl">
-		<ngmap route="routes" points="points"></ngmap>
+		<ngmap center="center" scale="scale" routes=[] points=[] ></ngmap>
 	</div>
 </body>
-
