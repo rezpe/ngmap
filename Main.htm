@@ -14,6 +14,13 @@
 			$scope.center = [48.85,2.35]
 			$scope.scale = 100
 
+			$scope.points=[{name:"Paris",lat:48.85,long:2.35},
+										 {name:"Madrid",lat:40.40,long:-3.71},
+									 	 {name:"Portland",lat:45.52,long:-122.68},]
+
+			$scope.routes=[{olat:48.85 ,olong:2.35, dlat:40.40, dlong:-3.71,value:50},
+										{olat:45.52 ,olong:-122.68, dlat:40.40, dlong:-3.71,value:50}]
+
 		});
 
 	</script>
@@ -21,6 +28,6 @@
 
 <body ng-app="geo">
 	<div ng-controller="MapCtrl">
-		<ngmap center="center" scale="scale" routes=[] points=[] ></ngmap>
+		<ngmap center="center" scale="scale" routes="routes" points="points" ></ngmap>
 	</div>
 </body>
