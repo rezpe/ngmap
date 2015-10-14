@@ -6,7 +6,7 @@
     "Sebastien Perez Vasseur <sebastien.perezvasseur@gmail.com>"
   ],
   "description": "Angular D3 Map",
-  "main": "ngmaps.js",
+  "main": ["ngmaps.js","data/land.topojson"],
   "keywords": [
     "angular",
     "maps",
