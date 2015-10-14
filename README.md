@@ -10,14 +10,15 @@ Getting Started
 
 THE API IS WIP !!!!
 
-This library provides an angular directive that displays a world map with the data in the attibutes:
+This library provides an angular directive that displays a world map with the following data in the attibutes:
+
+* center: the coordinates of the center of the map
+* scale: the zoom level of the map
 * routes: array of routes with originlat, originlon, destlat, destlon, width
-** Example: 
 ```javascript
 [{olat:48.85 ,olong:2.35, dlat:40.40, dlong:-3.71,value:50},
  {olat:45.52 ,olong:-122.68, dlat:40.40, dlong:-3.71,value:50}]
 ```
-
 * points: array of points with text, pointlat, pointlon
 ```javascript
 [{name:"Paris",lat:48.85,long:2.35},
